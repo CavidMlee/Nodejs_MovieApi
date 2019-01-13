@@ -8,16 +8,16 @@ const Movie = require('../models/Movie')
 router.get('/', (req, res) => {                         //getAll api-si    find ile bos morterze qoyub butun datani cekdik
   const promise = Movie.aggregate([
     {
-      $lookup:{
-        from:'directors',
-        localField:'director_id',
-        foreignField:'_id',
-        as:'director'
+      $lookup: {
+        from: 'directors',
+        localField: 'director_id',
+        foreignField: '_id',
+        as: 'director'
 
       }
     },
     {
-      $unwind:'$director'
+      $unwind: '$director'
     }
   ]);
   promise.then((data) => {
@@ -28,8 +28,8 @@ router.get('/', (req, res) => {                         //getAll api-si    find 
 });
 
 //Top10 list
-router.get('/top10', (req, res) => {                         
-  const promise = Movie.find({}).limit(10).sort({imdb_score:-1});
+router.get('/top10', (req, res) => {
+  const promise = Movie.find({}).limit(10).sort({ imdb_score: -1 });
   promise.then((data) => {
     res.json(data);
   }).catch((err) => {
@@ -59,9 +59,9 @@ router.put('/:movie_id', (req, res, next) => {
     req.params.movie_id,
     req.body,
     {
-      new:true                               //update edenkimi yeni datani gosterecek(update olunmusu)
+      new: true                               //update edenkimi yeni datani gosterecek(update olunmusu)
     }
-    );
+  );
 
   promise.then((data) => {
     if (!data) {
@@ -80,21 +80,21 @@ router.delete('/:movie_id', (req, res, next) => {
     if (!data) {
       next({ message: 'Bu filim tapilmadi.', code: 99 })
     }
-    res.json(data);
+    res.json({status:1});
   }).catch((err) => {
     res.json(err)
   });
 });
 
 //Between
-router.get('/between/:start_year/:end_year', (req, res) => {   
-  const {start_year,end_year} = req.params;    
+router.get('/between/:start_year/:end_year', (req, res) => {
+  const { start_year, end_year } = req.params;
 
   const promise = Movie.find(
     {                                                                         // '$gte'  boyukdur beraber  demekdir 
-      year:{'$gte':parseInt(start_year),'$lte':parseInt(end_year) }           // '$lte'  kicikdir beraber demekdir
+      year: { '$gte': parseInt(start_year), '$lte': parseInt(end_year) }           // '$lte'  kicikdir beraber demekdir
     }                                                                         // '$gt' boyukdur, '$lt' kicikdir demekdir
-    );
+  );
 
   promise.then((data) => {
     res.json(data);
@@ -108,9 +108,10 @@ router.get('/between/:start_year/:end_year', (req, res) => {
 
 //Post isi
 router.post('/', (req, res, next) => {
-  const { title, imdb_score, category, country, year } = req.body;
+  const { title, imdb_score, category, country, year, director_id } = req.body;
   const movie = new Movie({                    //belede yaza bilerik:  const movie = new Movie(req.body);
     title: title,
+    director_id: director_id,
     imdb_score: imdb_score,
     category: category,
     country: country,

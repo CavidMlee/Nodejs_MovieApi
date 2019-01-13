@@ -8,10 +8,19 @@ const indexRouter = require('./routes/index');
 const movie = require('./routes/movie');
 const director = require('./routes/director');
 
+
 const app = express();
 
 //database
 const db = require('./helper/db')();
+
+//Config
+const config = require('./config');
+app.set('api_secret_key', config.api_secret_key)  //qlobal etdikki her yerden buna elimiz catsin (req.app.get('api_secret_key') - bele )
+
+//Middleware
+const verifyToken = require('./middleware/verify-token');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -23,6 +32,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/api',verifyToken);                 //middleware-mizdir api ile bagli unvana girende middileware ile tokeni yoxlayir
 app.use('/api/movies', movie);
 app.use('/api/directors', director);
 
