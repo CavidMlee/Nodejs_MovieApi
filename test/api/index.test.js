@@ -10,7 +10,7 @@ describe('Node Server', ()=>{
         chai.request(server)
         .get('/')                         //localhost:3000/ portunu yoxlayacaq
         .end((err,res) => {
-            res.should.have.status(200);    //deyirikki respons statusu 200 olamlidir ve testimizde bunu yoxlayacaq
+            res.should.have.status(200);    //deyirikki respons statusu 200 olamlidir ve testimizde bunu yoxlayacaq.
             done();
         })
     });
