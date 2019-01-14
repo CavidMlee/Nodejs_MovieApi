@@ -9,4 +9,4 @@ before_install:
   # - npm install chai-http -g
 
 script:
-  - npm run test  
+  - npm run test
